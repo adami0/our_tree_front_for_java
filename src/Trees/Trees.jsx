@@ -8,7 +8,7 @@ class Trees extends React.Component {
             displayInput: false,
             inputTreeValue: '',
             treeList: [],
-            newNameTree: ''
+            newNameTree: '',
         };
     }
 
@@ -21,7 +21,7 @@ class Trees extends React.Component {
                         return (
                             <div className="treeListDiv siimple-list-item" key={el.id} onClick={() => { }}>
                                 <input className="siimple-input siimple-input--fluid white hide" type="text" placeholder={el.name} onChange={(evt) => this.handleChangeNewNameTree(evt)}></input>
-                                <div ref={el.id} className="siimple-btn siimple-btn--light siimple-btn--fluid">{el.name}</div>
+                                <div ref={el.id} className="siimple-btn siimple-btn--light siimple-btn--fluid" onClick={() => {this.displayTree(el.id)}}>{el.name}</div>
                                 <div className="siimple-btn siimple-btn--primary siimple-btn--small" onClick={() => this.displayRenameInput(el.id)}>Rename</div>
                                 <div className="siimple-btn siimple-btn--primary siimple-btn--small hide" onClick={() => this.renameTree(el.id)}>Send</div>
                                 <div className="siimple-btn siimple-btn--error siimple-btn--small hide" onClick={() => this.cancelRename(el.id)}>Cancel</div>
@@ -78,7 +78,9 @@ class Trees extends React.Component {
                 let string = new TextDecoder("utf-8").decode(resp.value);
                 console.log(string);
                 this.retrievingTreesList();
-                this.state.displayInput = false;
+                this.setState({
+                    displayInput: false
+                })
             })
         }
     }
@@ -93,6 +95,10 @@ class Trees extends React.Component {
         this.setState({
             displayInput: true
         })
+    }
+
+    displayTree(treeId) {
+        this.props.parentCallback3(treeId);
     }
 
     //if clicked on rename, we display an input for the new name wished
@@ -170,17 +176,12 @@ class Trees extends React.Component {
                 method: 'get'
             })
                 .then(res => {
-                    //res is a RedeableStream so we need a reader
-                    //let reader = res.body.getReader();
-                    //return reader.read();
                     return res.json();
                 }).then(resp => {
-                    //let treeList = new TextDecoder("utf-8").decode(resp.value);
                     this.setState({
                         treeList: resp
                     })
                     console.log(this.state.treeList);
-                    //this.treeListRename();
                 })
         } else {
             return;

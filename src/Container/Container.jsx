@@ -2,9 +2,9 @@ import React from 'react';
 import Navbar from '../Navbar/Navbar'
 import Login from '../Login/Login'
 import Trees from '../Trees/Trees'
+import Members from '../Members/Members'
 import './Container.css';
 import '../../node_modules/siimple'
-import { isNoop } from '@babel/types';
 
 class Container extends React.Component {
     constructor(props) {
@@ -12,7 +12,8 @@ class Container extends React.Component {
         this.state = {
             authStatus: 'true',
             userEmail: '',
-            userId: '42'
+            userId: '42',
+            treeId: ''
         };
     }
 
@@ -20,7 +21,11 @@ class Container extends React.Component {
         return (
             <div id="container">
                 <Navbar></Navbar>
-                {this.state.authStatus === 'false' ? <Login parentCallback = {this.checkAuthStatus} parentCallback2 = {this.retrieveUserEmail}></Login>:<Trees userId = {this.state.userId}></Trees>}
+                {this.state.authStatus === 'false' ? 
+                <Login key='1' parentCallback = {this.checkAuthStatus} parentCallback2 = {this.retrieveUserEmail}></Login>
+                :[this.state.treeId ?
+                    <Members key='3' treeId={this.state.treeId}></Members> 
+                    :<Trees key='2' parentCallback3 = {this.retrieveTreeId} userId = {this.state.userId}></Trees>]}
             </div>
         );
     }
@@ -29,9 +34,21 @@ class Container extends React.Component {
         this.setState({
             authStatus: authStatusToBe
         });
-        console.log(this.state.authStatus);
     }
    
+    retrieveTreeId = (treeId) => {
+        this.setState({
+            treeId: treeId
+        });
+        console.log(this.state.treeId);
+
+    } 
+
+    check() {
+        console.log(this.state.treeId);
+
+    }
+
     //we retrieve it from the child component login
     retrieveUserEmail = (userEmail) => {
         this.setState({
